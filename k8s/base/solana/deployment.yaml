@@ -24,11 +24,11 @@ spec:
           resources:
             requests: { cpu: "100m", memory: "128Mi" }
             limits:   { cpu: "500m", memory: "512Mi" }
-          readinessProbe:
-            httpGet: { path: /health, port: 8080 }
-            initialDelaySeconds: 1200
-            periodSeconds: 1200
-          livenessProbe:
-            httpGet: { path: /health, port: 8080 }
-            initialDelaySeconds: 1800
-            periodSeconds: 1800
+          # readinessProbe:
+          #   httpGet: { path: /health, port: 8080 }
+          #   initialDelaySeconds: 1200
+          #   periodSeconds: 1200
+          # livenessProbe:
+          #   httpGet: { path: /health, port: 8080 }
+          #   initialDelaySeconds: 1800
+          #   periodSeconds: 1800
