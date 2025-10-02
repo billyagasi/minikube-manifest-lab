@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongo-setup
+  namespace: solana-api-production
+spec:
+  backoffLimit: 6
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: setup
+          image: mongo:7
+          command: ["/bin/sh","-c"]
+          args:
+            - |
+              set -e
+              echo "Waiting for Mongo..."
+              until mongosh --host mongo --eval "db.runCommand({ ping: 1 })" >/dev/null 2>&1; do sleep 2; done
+              echo "Create app user (if not exists)"
+              mongosh --host mongo -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin <<'JS'
+              const dbName = "solana_api";
+              const user = "app";
+              const pwd  = "appPW";
+              const roles = [{role:"readWrite", db:dbName}];
+              try { db.getSiblingDB(dbName).createUser({user:user, pwd:pwd, roles:roles}); print("created user"); }
+              catch(e){ if (e.codeName==="DuplicateKey"){ print("user exists"); } else { throw e; } }
+              JS
+              echo "Upsert API key"
+              mongosh --host mongo -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin <<'JS'
+              const db = db.getSiblingDB("solana_api");
+              db.api_keys.updateOne({key:"12345678"}, {$set:{active:true, note:"bootstrap"}}, {upsert:true});
+              db.api_keys.createIndex({key:1},{unique:true});
+              JS
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom: { secretKeyRef: { name: mongo-root-secret, key: MONGO_INITDB_ROOT_USERNAME } }
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom: { secretKeyRef: { name: mongo-root-secret, key: MONGO_INITDB_ROOT_PASSWORD } }

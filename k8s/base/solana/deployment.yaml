@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solana-balance-api
+  namespace: solana-api-production
+  labels: { app: solana-balance-api }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: solana-balance-api }
+  template:
+    metadata:
+      labels: { app: solana-balance-api }
+    spec:
+      containers:
+        - name: api
+          image: isagaaa21/solana-balance-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef: { name: solana-api-config }
+            - secretRef:   { name: solana-api-secret }
+          resources:
+            requests: { cpu: "100m", memory: "128Mi" }
+            limits:   { cpu: "500m", memory: "512Mi" }
+          readinessProbe:
+            httpGet: { path: /health, port: 8080 }
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /health, port: 8080 }
+            initialDelaySeconds: 10
+            periodSeconds: 10

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: solana-api-config
+  namespace: solana-api-production
+data:
+  PORT: "8080"
+  MONGO_DB: "solana_api"
+  MONGO_COLLECTION: "api_keys"
+  RATE_LIMIT_PER_MIN: "10"
+  CACHE_TTL_SECONDS: "10"
+  REQUEST_TIMEOUT_SECONDS: "10"
+  MAX_BODY_BYTES: "1048576"
