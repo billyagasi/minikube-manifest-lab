@@ -6,7 +6,7 @@ metadata:
   labels:
     app: solana-balance-api
 spec:
-  replicas: 4
+  replicas: 8
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -16,8 +16,12 @@ spec:
       maxUnavailable: 0
       maxSurge: 25%
       steps:
+        - setWeight: 25
+        - pause: {}
         - setWeight: 50
         - pause: {}
+        - setWeight: 75
+        - pause: {}   
   template:
     metadata:
       labels:
@@ -39,4 +43,4 @@ spec:
               value: "v1"
           resources:
             requests: { cpu: "100m", memory: "128Mi" }
-            limits:   { cpu: "300m", memory: "256Mi" }
+            limits:   { cpu: "200m", memory: "256Mi" }
