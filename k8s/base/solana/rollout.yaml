@@ -7,7 +7,7 @@ metadata:
     app: solana-balance-api
 spec:
   replicas: 8
-  revisionHistoryLimit: 3
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app: solana-balance-api
@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: isagaaa21/solana-balance-api:sha-6e5e9f8e0ed3206475eb37c51b08beba766f1013
+          image: isagaaa21/solana-balance-api:sha-da425f7714587650e9c2d304b4489c7495498662
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -40,7 +40,7 @@ spec:
                 name: solana-api-secret
           env:
             - name: VERSION
-              value: "v1"
+              value: "v2"
           resources:
             requests: { cpu: "100m", memory: "128Mi" }
             limits:   { cpu: "200m", memory: "256Mi" }
