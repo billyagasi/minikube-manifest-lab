@@ -26,9 +26,9 @@ spec:
             limits:   { cpu: "500m", memory: "512Mi" }
           readinessProbe:
             httpGet: { path: /health, port: 8080 }
-            initialDelaySeconds: 5
-            periodSeconds: 5
+            initialDelaySeconds: 1200
+            periodSeconds: 1200
           livenessProbe:
             httpGet: { path: /health, port: 8080 }
-            initialDelaySeconds: 10
-            periodSeconds: 10
+            initialDelaySeconds: 1800
+            periodSeconds: 1800
