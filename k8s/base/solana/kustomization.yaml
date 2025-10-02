@@ -3,5 +3,6 @@ kind: Kustomization
 namespace: solana-api-production
 resources:
   - configmap.yaml
-  - deployment.yaml
+#  - deployment.yaml
   - service.yaml
+  - rollout.yaml

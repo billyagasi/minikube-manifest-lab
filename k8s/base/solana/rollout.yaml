@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: solana-balance-api
+  namespace: solana-api-production
+  labels:
+    app: solana-balance-api
+spec:
+  replicas: 4
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: solana-balance-api
+  strategy:
+    canary:
+      maxUnavailable: 0
+      maxSurge: 25%
+      steps:
+        - setWeight: 50
+        - pause: {}
+  template:
+    metadata:
+      labels:
+        app: solana-balance-api
+    spec:
+      containers:
+        - name: api
+          image: isagaaa21/solana-balance-api:sha-6e5e9f8e0ed3206475eb37c51b08beba766f1013
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: solana-api-config
+            - secretRef:
+                name: solana-api-secret
+          env:
+            - name: VERSION
+              value: "v1"
+          resources:
+            requests: { cpu: "100m", memory: "128Mi" }
+            limits:   { cpu: "300m", memory: "256Mi" }

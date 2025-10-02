@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: isagaaa21/solana-balance-api:sha-da425f7714587650e9c2d304b4489c7495498662
+          image: isagaaa21/solana-balance-api:sha-6e5e9f8e0ed3206475eb37c51b08beba766f1013
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
