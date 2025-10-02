@@ -15,7 +15,7 @@ spec:
       containers:
         - name: api
           image: isagaaa21/solana-balance-api:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           envFrom:
